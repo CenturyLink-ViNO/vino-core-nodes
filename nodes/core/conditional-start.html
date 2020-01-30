@@ -1,0 +1,108 @@
+<!--
+  Copyright JS Foundation and other contributors, http://js.foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<script type='text/javascript' src='/nodes/lib/ui/NodeConfig.js'/>
+
+<script type="text/x-red" data-template-name="conditional start">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="common.label.name"></span></label>
+        <input type="text" id="node-input-name" placeholder="Service Name">
+    </div>
+    <div class='form-row'>
+        <label for='node-input-description'><i class='fa fa-tags'></i> Description</label>
+        <textarea id='node-input-description' placeholder=''></textarea>
+    </div>
+
+    <br/>
+    <div class='form-row'>
+        <label for='baseType-select' id='baseType-select-label'><i class='fa fa-tag'></i>Conditional</label>
+        <select id='baseType-select'>
+        </select>
+    </div>
+
+    <br/>
+    <div class='form-row'>
+        <button type="button" id='statusOptions-button'>Status Message Options</button>
+    </div>
+
+    <div id='baseTypes'>
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="conditional start">
+    <p>NOTE: This node is deprecated and will be removed in a later version</p>
+    <br>
+    <p>Manages a conditional branching of service flow logic. Provides parameters to define the left and right hand
+       operands of a boolean expression as well as the operation the perform and the data type of the operands. Any
+       of these parameters can be provided in the node configuration, at activation time, or as mapped parameters.
+       If the expression evaluates as false, it will follow the path connected to the top outlet of this node and if
+       it evaluates true it will follow the path connected to the bottom outlet. Both paths may contain any number
+       of steps (including no steps at all), but they must converge back into a single "Conditional End" node. After
+       meeting at the conditional end, the service will resume the same path of execution.
+    </p>
+</script>
+
+<script type="text/javascript">
+    (function() {
+        RED.nodes.registerType('conditional start',{
+            category: 'ViNO',
+            color:"rgb(231, 231, 174)",
+            defaults: {
+                name: {value:"Conditional Start (Deprecated)"},
+                description: {value:''},
+                baseTypes: {value:[]},
+                selectedBaseType: {value:'conditional'},
+                statusConfiguration: {value:{}},
+                isDeactivationNode: {value: false}
+            },
+            inputs:1,
+            outputs:2,
+            outputLabels: ['False Side','True Side'],
+            icon: "white-globe.png",
+            label: function() {
+                if (this.name) {
+                    return this.name;
+                }
+                else
+                {
+                    return 'Conditional Start';
+                }
+
+            },
+            labelStyle: function() {
+                return this.name?"node_label_italic":"";
+            },
+            oneditprepare: function()
+            {
+               node = this;
+               jQuery(".editor-tray").width(900);
+               ctl.ui.renderUI(node, RED.settings.conditionalStartCommands);
+            },
+            oneditsave: function()
+            {
+               node = this;
+               jQuery('#node-input-lastModified').val(Date.now());
+               ctl.ui.save(node);
+               ctl.ui.close(node);
+            },
+            oneditcancel: function()
+            {
+               node = this;
+               ctl.ui.close(node);
+            }
+        });
+    })();
+</script>

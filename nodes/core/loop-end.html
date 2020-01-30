@@ -1,0 +1,56 @@
+<!--
+  Copyright JS Foundation and other contributors, http://js.foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<script type="text/x-red" data-template-name="loop end">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="common.label.name"></span></label>
+        <input type="text" id="node-input-name" placeholder="Loop End">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="loop end">
+    <p>Node to be placed at the end of a loop body, must be connected back to the input of a loop start node.</p>
+</script>
+
+<script type="text/javascript">
+    (function() {
+        RED.nodes.registerType('loop end',{
+            category: 'ViNO',
+            color:"rgb(231, 231, 174)",
+            defaults: {
+                name: {value:"Loop End"}
+            },
+            inputs:1,
+            outputs:1,
+            outputLabels: ['Must connect back to the input of a Loop Start node'],
+            icon: "white-globe.png",
+            label: function() {
+                if (this.name) {
+                    return this.name;
+                }
+                else
+                {
+                    return 'Loop End';
+                }
+
+            },
+            labelStyle: function() {
+                return this.name?"node_label_italic":"";
+            }
+        });
+    })();
+</script>
+

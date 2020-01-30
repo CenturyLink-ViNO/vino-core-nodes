@@ -1,0 +1,90 @@
+<!--
+  Copyright JS Foundation and other contributors, http://js.foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<script type="text/x-red" data-template-name="service entrypoint">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="common.label.name"></span></label>
+        <input type="text" id="node-input-name" placeholder="Service Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-description"><i class="fa fa-tag"></i> <span>Description</span></label>
+        <input type="text" id="node-input-description" placeholder="Service Description">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="service entrypoint">
+    <p>Creates an HTTP end-point for a ViNO Service.</p>
+    <p>This node will listen on several URLs generated from the service name:</p>
+    <ul>
+        <li>/filtered-name/template - Returns a generated activation template for this service</li>
+        <li>/filtered-name/activate - Activates this service based on activation data passed in</li>
+        <li>/filtered-name/status/activation-id - Returns the status of the activation of a given service id</li>
+    </ul>
+</script>
+
+<script type="text/javascript">
+    (function() {
+        RED.nodes.registerType('service entrypoint',{
+            category: 'ViNO',
+            color:"rgb(231, 231, 174)",
+            defaults: {
+                name: {value:"Service Start"},
+                description: {value: null, required: true},
+                serviceRegistrationId: {value: ''},
+                initialNodeId: {value: ''}
+            },
+            inputs:0,
+            outputs:2,
+            outputLabels: ['Activation Flow','Deactivation Flow'],
+            icon: "white-globe.png",
+            label: function() {
+                if (this.name) {
+                    return this.name + ' Start';
+                }
+                else
+                {
+                    return 'Service Start';
+                }
+
+            },
+            labelStyle: function() {
+                return this.name?"node_label_italic":"";
+            },
+            oneditsave: function() {
+                function uuidv4() {
+                    var crypto = window.crypto || window.msCrypto;
+
+                    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, function(c)
+                    {
+                        return (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+                    });
+                }
+                if (!this.serviceRegistrationId || this.serviceRegistrationId === '')
+                {
+                    this.serviceRegistrationId = uuidv4();
+                    this.initialNodeId = this.id;
+                }
+                //If these don't match then a copy was made after setting the registration ID so it must be recreated
+                if (this.initialNodeId !== this.id)
+                {
+                    this.serviceRegistrationId = uuidv4();
+                    this.initialNodeId = this.id;
+                }
+            }
+
+        });
+    })();
+</script>

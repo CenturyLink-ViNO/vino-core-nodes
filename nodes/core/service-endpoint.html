@@ -1,0 +1,67 @@
+<!--
+  Copyright JS Foundation and other contributors, http://js.foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<script type="text/x-red" data-template-name="service endpoint">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="common.label.name"></span></label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-uri"><span>Callback URI</span></label>
+        <input type="text" id="node-input-uri" placeholder="/rest/service/activated">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="service endpoint">
+    <p>Closes out the activation and writes data back to the ViNO Configuration Store.</p>
+    <h3>Inputs</h3>
+    <p>Name: The name displayed for this node. Does not impact functionality, just for display purposes.</p>
+    <p>Callback URI: The URI used when issuing the Configuration Store write call. The default value for this should suffice most cases.</p>
+</script>
+
+<script type="text/javascript">
+    (function() {
+        RED.nodes.registerType('service endpoint',{
+            category: 'ViNO',
+            color:"rgb(231, 231, 174)",
+            defaults: {
+                name: {value:"Service End"},
+                uri: {value: "/rest/service/activated"}
+            },
+            inputs:1,
+            outputs:0,
+            icon: "db.png",
+            align: "right",
+            label: function() {
+                if (this.name) {
+                    return this.name;
+                }
+                else
+                {
+                    return 'Service End';
+                }
+            },
+            labelStyle: function() {
+                return this.name?"node_label_italic":"";
+            },
+            oneditprepare: function() {
+                // Intentionally Left Blank
+            }
+
+        });
+    })();
+</script>

@@ -1,0 +1,89 @@
+<!--
+  Copyright JS Foundation and other contributors, http://js.foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<script type='text/javascript' src='/nodes/lib/ui/NodeConfig.js'/>
+
+<script type="text/x-red" data-template-name="conditional end">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="common.label.name"></span></label>
+        <input type="text" id="node-input-name" placeholder="conditional End">
+    </div>
+    <div class='form-row'>
+        <label for='node-input-description'><i class='fa fa-tags'></i> Description</label>
+        <textarea id='node-input-description' placeholder=''></textarea>
+    </div>
+
+    <br/>
+    <div class='form-row'>
+        <label for='baseType-select' id='baseType-select-label'><i class='fa fa-tag'></i>Conditional</label>
+        <select id='baseType-select'>
+        </select>
+    </div>
+
+    <div id='baseTypes'>
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="conditional end">
+    <p>NOTE: This node is deprecated and will be removed in a later version<p>
+    <br>
+    <p>Node to be placed at the end of a conditional, parameters from within the conditional that need to be accessed by
+      later steps should be defined in the output parameters of this node.
+    </p>
+</script>
+
+<script type="text/javascript">
+    (function() {
+        RED.nodes.registerType('conditional end',{
+            category: 'ViNO',
+            color:"rgb(231, 231, 174)",
+            defaults: {
+                name: {value:"Conditional End (Deprecated)"},
+                description: {value:''},
+                outputParameters: {value: []},
+                isDeactivationNode: {value: false}
+            },
+            inputs:1,
+            outputs:1,
+            icon: "white-globe.png",
+            label: function() {
+                if (this.name) {
+                    return this.name;
+                }
+                else
+                {
+                    return 'conditional end';
+                }
+
+            },
+            labelStyle: function() {
+                return this.name?"node_label_italic":"";
+            },
+            oneditprepare: function()
+            {
+               node = this;
+               jQuery(".editor-tray").width(900);
+               ctl.ui.createConditionalEndDiv(node);
+            },
+            oneditsave: function()
+            {
+               node = this;
+               jQuery('#node-input-lastModified').val(Date.now());
+               ctl.ui.saveConditionalOutputParameters(node);
+            }
+        });
+    })();
+</script>

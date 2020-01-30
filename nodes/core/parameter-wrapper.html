@@ -1,0 +1,120 @@
+<!--
+  Copyright JS Foundation and other contributors, http://js.foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<script type='text/javascript' src='/nodes/lib/ui/NodeConfig.js'/>
+
+<script type="text/x-red" data-template-name="parameter wrapper">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="common.label.name"></span></label>
+        <input type="text" id="node-input-name" placeholder="Service Name">
+    </div>
+    <div class='form-row'>
+        <label for='node-input-description'><i class='fa fa-tags'></i> Description</label>
+        <textarea id='node-input-description' placeholder=''></textarea>
+    </div>
+
+    <br/>
+    <div class='form-row'>
+        <label for='baseType-select' id='baseType-select-label'><i class='fa fa-tag'></i>Mode</label>
+        <select id='baseType-select'>
+        </select>
+    </div>
+
+    <br/>
+    <div class='form-row'>
+        <button type="button" id='statusOptions-button'>Status Message Options</button>
+    </div>
+
+    <div id='baseTypes'>
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="parameter wrapper">
+    <p>
+        Enables any number of arbitrary input parameters to map to properties of the msg object passed to the following
+        node. This makes it possible to use any Node Red node in a service while still providing input and output
+        parameter functionality (e.g. mapping from another step or pulling a value from a constant).
+
+        Parses the msg object it recieves into any number of arbitrary output parameters that can be used later on in
+        the service. It will first inspect the msg for any properties that match the names of defined output parameters
+        If the msg does not contain the output parameter as a property, it will inspect the payload. If the payload is
+        an object it will again look for matching property names or if it is a string it will search using the Regex
+        string provided in the output parameter definition (XPath and JSONPath are unsupported for this node)
+
+    </p>
+    <p>
+        Example:
+
+        Connect this node to an HTTP request node and define input parameters for "url,", "method", and "payload".
+        Those parameters will then be passed on to the HTTP node, defining the URL to make the request to, the HTTP
+        method to use, and the body of the request to send. The HTTP node can then be connected to another wrapper
+        node to parse the response from the request into any number of output parameters that can be used
+        in subsequent nodes.
+    </p>
+</script>
+
+<script type="text/javascript">
+    (function() {
+
+        RED.nodes.registerType('parameter wrapper',{
+            category: 'ViNO',
+            color:"rgb(231, 231, 174)",
+            defaults: {
+                name: {value:"Parameter wrapper"},
+                description: {value:''},
+                baseTypes: {value: []},
+                selectedBaseType: {value:'parameter_wrapper'},
+                statusConfiguration: {value:{}},
+                isDeactivationNode: {value: false}
+
+            },
+            inputs:1,
+            outputs:1,
+            icon: "white-globe.png",
+            label: function() {
+                if (this.name) {
+                    return this.name;
+                }
+                else
+                {
+                    return 'parameter wrapper';
+                }
+
+            },
+            labelStyle: function() {
+                return this.name?"node_label_italic":"";
+            },
+            oneditprepare: function()
+            {
+               node = this;
+               jQuery(".editor-tray").width(900);
+               ctl.ui.renderUI(node, RED.settings.parameterWrapperCommands);
+            },
+            oneditsave: function()
+            {
+               node = this;
+               jQuery('#node-input-lastModified').val(Date.now());
+               ctl.ui.save(node);
+               ctl.ui.close(node);
+            },
+            oneditcancel: function()
+            {
+               node = this;
+               ctl.ui.close(node);
+            }
+        });
+    })();
+</script>

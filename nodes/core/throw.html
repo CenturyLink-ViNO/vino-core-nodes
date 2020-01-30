@@ -1,0 +1,98 @@
+<!--
+  Copyright JS Foundation and other contributors, http://js.foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<script type='text/javascript' src='/nodes/lib/ui/NodeConfig.js'/>
+
+<script type="text/x-red" data-template-name="throw">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="common.label.name"></span></label>
+        <input type="text" id="node-input-name" placeholder="throw">
+    </div>
+    <div class='form-row'>
+        <label for='node-input-description'><i class='fa fa-tags'></i> Description</label>
+        <textarea id='node-input-description' placeholder=''></textarea>
+    </div>
+    <div class='form-row'>
+        <label for='node-input-message'><i class='fa fa-tags'></i> Message</label>
+        <textarea id='node-input-message' placeholder=''></textarea>
+    </div>
+    <br/>
+    <div class='form-row'>
+        <label for='baseType-select' id='baseType-select-label'><i class='fa fa-tag'></i>throw error</label>
+        <select id='baseType-select'>
+        </select>
+    </div>
+
+    <div id='baseTypes'>
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="throw">
+    <p> Throws an error. Useful when used in conjunction with a conditional to check if a particular value is valid
+        and trigger a service failure/rollback if not.
+    </p>
+</script>
+
+<script type="text/javascript">
+    (function() {
+        RED.nodes.registerType('throw',{
+            category: 'ViNO',
+            color:"rgb(231, 231, 174)",
+            defaults: {
+                name: {value:"Throw Error"},
+                description: {value:''},
+                message: {value: ''},
+                isDeactivationNode: {value: false},
+                baseTypes: {value:[]},
+                selectedBaseType: {value:'throw_error'}
+            },
+            inputs:1,
+            outputs:0,
+            icon: "white-globe.png",
+            label: function() {
+                if (this.name) {
+                    return this.name;
+                }
+                else
+                {
+                    return 'throw error';
+                }
+            },
+            labelStyle: function() {
+                return this.name?"node_label_italic":"";
+            },
+            oneditprepare: function()
+            {
+               node = this;
+               jQuery(".editor-tray").width(900);
+               ctl.ui.renderUI(node, RED.settings.throwCommands);
+               jQuery('.output-parameters').hide();
+            },
+            oneditsave: function()
+            {
+               node = this;
+               jQuery('#node-input-lastModified').val(Date.now());
+               ctl.ui.save(node);
+               ctl.ui.close(node);
+            },
+            oneditcancel: function()
+            {
+               node = this;
+               ctl.ui.close(node);
+            }
+        });
+    })();
+</script>
