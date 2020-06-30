@@ -77,6 +77,7 @@ module.exports = function(RED)
                   name: 'service status',
                   key: 'service_status',
                   description: 'Outputs a message to the service activation status',
+                  allowedExtractionMethods: ['CUSTOM'],
                   inputParameters: [],
                   outputParameters: []
                }

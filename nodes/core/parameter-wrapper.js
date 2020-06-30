@@ -232,6 +232,7 @@ module.exports = function(RED)
                   key: 'parameter_wrapper',
                   description: 'Injects any input parameters into the Node-Red msg object and attempts to extract any' +
                      'output parameters from the msg object with a matching key',
+                  allowedExtractionMethods: ['CUSTOM'],
                   inputParameters:
                      [],
                   outputParameters:
@@ -241,6 +242,7 @@ module.exports = function(RED)
                   name: 'Parameter Combiner (String)',
                   key: 'parameter_combiner_string',
                   description: 'Combines any input parameters into a string list type output',
+                  allowedExtractionMethods: ['CUSTOM'],
                   inputParameters:
                      [],
                   outputParameters:
@@ -262,6 +264,7 @@ module.exports = function(RED)
                   name: 'Parameter Combiner (Number)',
                   key: 'parameter_combiner_number',
                   description: 'Combines any input parameters into a string list type output',
+                  allowedExtractionMethods: ['CUSTOM'],
                   inputParameters:
                      [],
                   outputParameters:
@@ -283,6 +286,7 @@ module.exports = function(RED)
                   name: 'Parameter Combiner (Boolean)',
                   key: 'parameter_combiner_boolean',
                   description: 'Combines any input parameters into a string list type output',
+                  allowedExtractionMethods: ['CUSTOM'],
                   inputParameters:
                      [],
                   outputParameters:

@@ -73,6 +73,7 @@ module.exports = function(RED)
                   name: 'throw error',
                   key: 'throw_error',
                   description: 'Throws an error and prints a message',
+                  allowedExtractionMethods: ['CUSTOM'],
                   inputParameters:
                      [],
                   outputParameters:

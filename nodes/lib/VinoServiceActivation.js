@@ -289,13 +289,21 @@ class VinoServiceActivation
       {
          nodeId = node._alias;  // eslint-disable-line
       }
+      const filteredInputParams = [];
+      inputParams.forEach(function(param)
+      {
+         if (!param.encrypt)
+         {
+            filteredInputParams.push(param);
+         }
+      });
       if (this.shouldDisplayMessage('Success', node))
       {
          this.status.push({
             'status': 'Success',
             'time': Date.now(),
             'message': message,
-            'inputParameters': inputParams,
+            'inputParameters': filteredInputParams,
             'outputParameters': outputParams,
             'jobId': this.id,
             'statusIndex': this.status.length

@@ -276,6 +276,7 @@ module.exports = function(RED)
                   name: 'Conditional',
                   key: 'conditional',
                   description: 'Used branch between 2 paths based on a condition',
+                  allowedExtractionMethods: ['CUSTOM'],
                   inputParameters:
                      [
                         {

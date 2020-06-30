@@ -17,7 +17,6 @@ module.exports = function(RED)
       {
          return;
       }
-
       if (subflowInstanceNodes)
       {
          for (const nodeIndex in subflowInstanceNodes)
@@ -69,7 +68,6 @@ module.exports = function(RED)
    function parameterShouldBeConvertedFromListToScalar(parameter)
    {
       let ret = true;
-
       if (parameter.isFromConstants())
       {
          ret = false;
@@ -78,7 +76,6 @@ module.exports = function(RED)
       {
          ret = false;
       }
-
       if (parameter.stringValue && parameter.parameterType === 'string')
       {
          ret = false;
@@ -139,7 +136,6 @@ module.exports = function(RED)
                   // If the input for the loop step contains less values than the number of iterations just
                   // loop back to the begginning of the array
                   valueIndex = iteration % srcParam.stringListValue.length;
-
                   // If it's a list of scalars, get the value for the iteration
                   if (!isAnArrayOfArrays(srcParam.stringListValue))
                   {
@@ -379,6 +375,7 @@ module.exports = function(RED)
                   name: 'Loop',
                   key: 'loop',
                   description: 'Used to wrap one or more steps in a loop',
+                  allowedExtractionMethods: ['CUSTOM'],
                   inputParameters:
                      [
                         {
@@ -407,6 +404,7 @@ module.exports = function(RED)
                   name: 'For Each Loop (String)',
                   key: 'forEachLoopString',
                   description: 'Used to wrap one or more steps in a loop',
+                  allowedExtractionMethods: ['CUSTOM'],
                   inputParameters:
                      [
                         {
@@ -435,6 +433,7 @@ module.exports = function(RED)
                   name: 'For Each Loop (Number)',
                   key: 'forEachLoopNumber',
                   description: 'Used to wrap one or more steps in a loop',
+                  allowedExtractionMethods: ['CUSTOM'],
                   inputParameters:
                      [
                         {
@@ -463,6 +462,7 @@ module.exports = function(RED)
                   name: 'For Each Loop (Boolean)',
                   key: 'forEachLoopBoolean',
                   description: 'Used to wrap one or more steps in a loop',
+                  allowedExtractionMethods: ['CUSTOM'],
                   inputParameters:
                      [
                         {
