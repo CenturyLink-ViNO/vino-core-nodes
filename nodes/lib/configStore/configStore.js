@@ -3,7 +3,36 @@
 /* globals module*/
 
 const typeorm = require('typeorm');
-const ServiceActivation = require('../../../entities/activation/ServiceActivation');
+const ServiceActivation = require('../../../../entities/activation/ServiceActivation');
+const Parameter = require('vino-node-red-nodes/lib/driver-utils').Parameter;
+
+function minimizeActivationTemplate(activationTemplate)
+{
+   const steps = [];
+   activationTemplate.steps.forEach(function(step)
+   {
+      const inputParameters = [];
+      step.inputParameters.forEach(function(inputParameter)
+      {
+         parameter = new Parameter(inputParameter);
+         if (parameter.hasValue())
+         {
+            delete parameter.parameterName;
+            delete parameter.parameterDescription;
+            delete parameter.inputDetails;
+            inputParameters.push(parameter);
+         }
+      });
+      step.inputParameters = inputParameters;
+      if (step.inputParameters.length > 0)
+      {
+         steps.push(step);
+      }
+   });
+   activationTemplate.steps = steps;
+   return activationTemplate;
+}
+
 
 module.exports = {
    processConfigurationStore: async function(activationData, node, msg)
@@ -60,6 +89,7 @@ module.exports = {
       }
       delete msg.vino;
       data.msg = msg;
+      data.inputTemplate = minimizeActivationTemplate(data.inputTemplate);
 
       const repository = typeorm.getRepository(ServiceActivation.ServiceActivation);
       const activation = repository.create(data);

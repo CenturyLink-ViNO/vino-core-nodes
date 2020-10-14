@@ -1,15 +1,14 @@
 /* globals module*/
 /* globals require*/
 /* globals console*/
-const NodeUtilities = require('../lib/driver-utils/index');
+const utils = require('vino-node-red-nodes/lib/driver-utils').Utils;
 const VinoServiceActivation = require('../lib/VinoServiceActivation');
-const utils = NodeUtilities.Utils;
 const ActivationTemplate = require('../lib/ActivationTemplate');
-const ServiceRegistration = require('../../entities/ServiceRegistration').ServiceRegistration;
-const ServiceActivation = require('../../entities/activation/ServiceActivation').ServiceActivation;
-const StepWrapper = require('../../entities/activation/StepWrapper').StepWrapper;
-const RootGroup = require('../../entities/settings/rootGroup').RootGroup;
-const settingsUtils = require('../../routes/services/utility/settingsUtility');
+const ServiceRegistration = require('../../../entities/ServiceRegistration').ServiceRegistration;
+const ServiceActivation = require('../../../entities/activation/ServiceActivation').ServiceActivation;
+const StepWrapper = require('../../../entities/activation/StepWrapper').StepWrapper;
+const RootGroup = require('../../../entities/settings/rootGroup').RootGroup;
+const settingsUtils = require('../../../routes/services/utility/settingsUtility');
 const SettingUtilities = new settingsUtils.SettingsUtility();
 const typeorm = require('typeorm');
 module.exports = function(RED)
@@ -43,7 +42,6 @@ module.exports = function(RED)
          });
       }
    }
-
    async function unregisterService(node)
    {
       const repository = typeorm.getRepository(ServiceRegistration);
@@ -238,7 +236,10 @@ module.exports = function(RED)
 
       this.getActivatedServiceData = async function(jobId)
       {
-         const service = await typeorm.getRepository(ServiceActivation).findOne(jobId, { relations: ['status'] });
+         const service = await typeorm.getRepository(ServiceActivation).findOne(jobId, {
+            select: ['id', 'referenceId', 'name', 'description', 'customerName', 'notes', 'startTime', 'settingsRootGroup', 'msg'],
+            relations: ['status']
+         });
          service.steps = await typeorm.getRepository(StepWrapper).find({ where: [{ serviceActivation: service }] });
          return service;
       };
@@ -279,7 +280,6 @@ module.exports = function(RED)
                }
             };
          }
-
          resp = [
             {
                status: 'Deactivation Started',

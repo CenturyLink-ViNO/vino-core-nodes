@@ -33,7 +33,7 @@
         </if>
     </target>
 
-    <target name='distribute' depends='eslint.check, dist.prepare'/>
+    <target name='distribute' depends='eslint.check, dist.prepare, dist.node.module'/>
 
     <target name='dist.prepare'>
 
@@ -56,6 +56,60 @@
         </copy>
     </target>
 
+    <target name="dist.node.module" depends="eslint.check, dist.prepare">
+        <mkdir dir='${tmp.npm.build.dir}'/>
+        <copy todir="${tmp.npm.build.dir}">
+            <fileset dir="${vino-core-nodes.dir}">
+                <include name="*.json"/>
+            </fileset>
+            <fileset dir="${tree.top}/build/npm">
+                <include name="vino-node-red-nodes*.tgz"/>
+            </fileset>
+        </copy>
+        <copy todir="${tmp.npm.build.dir}/lib/ui/dataTables">
+            <fileset dir="${tree.top}/lib-web/abacus-lib-js-ots/src/include/dataTables">
+                <include name="**/*"/>
+            </fileset>
+        </copy>
+        <copy todir="${tmp.npm.build.dir}/lib/ui/selectize">
+            <fileset dir="${tree.top}/lib-web/abacus-lib-js-ots/src/include/selectize">
+                <include name="**/*"/>
+            </fileset>
+        </copy>
+        <copy tofile='${tmp.npm.build.dir}/package.json' file='nodes/package.json' overwrite='true'>
+            <filterset>
+                <filter token='VERSION' value="${version.string}"/>
+            </filterset>
+        </copy>
+        <npm.build src.dir='${vino-core-nodes.dir}/nodes' dist.dir='${tmp.npm.build.dir}'/>
+        <mkdir dir="${tree.top}/build/npm"/>
+
+        <exec executable="cmd" dir="${tmp.npm.build.dir}" failonerror='true' osfamily='windows'><!-- output="${tmp.npm.build.dir}/dist/out.txt">-->
+            <arg value='/c'/>
+            <arg value='npm'/>
+            <arg value="pack"/>
+        </exec>
+        <exec executable="npm" dir="${tmp.npm.build.dir}" failonerror='true' osfamily='unix'><!-- output="${tmp.npm.build.dir}/dist/out.txt">-->
+            <arg value="pack"/>
+        </exec>
+        <exec executable="cmd" dir="${tmp.npm.build.dir}" failonerror='true' osfamily='windows'><!-- output="${tmp.npm.build.dir}/dist/out.txt">-->
+           <arg value='/c'/>
+           <arg value='npm'/>
+            <arg value="cache"/>
+            <arg value="add"/>
+            <arg value="vino-core-nodes-${version.string}.tgz"/>
+        </exec>
+        <exec executable="npm" dir="${tmp.npm.build.dir}" failonerror='true' osfamily='unix'><!-- output="${tmp.npm.build.dir}/dist/out.txt">-->
+            <arg value="cache"/>
+            <arg value="add"/>
+            <arg value="vino-core-nodes-${version.string}.tgz"/>
+        </exec>
+        <copy todir="${tree.top}/build/npm">
+            <fileset dir="${tmp.npm.build.dir}">
+                <include name="*.tgz"/>
+            </fileset>
+        </copy>
+    </target>
     <target name='eslint.check'>
         <eslint src.dir='${vino-core-nodes.dir}' failonerror='true' sourceType='node' ignore.pattern='lib/**/*.js'/>
     </target>

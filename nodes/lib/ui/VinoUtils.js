@@ -205,7 +205,7 @@ if (!ctl.ui.getProjectFiles)
    {
       const def = jQuery[deferredString](function(deferred)
       {
-         const url = '/files';
+         const url = 'files';
          const success = function(json)
          {
             if (json === undefined)
@@ -234,7 +234,7 @@ if (!ctl.ui.uploadFile)
    {
       const def = jQuery[deferredString](function(deferred)
       {
-         const url = '/files/upload';
+         const url = 'files/upload';
          const success = function(json)
          {
             deferred.resolve(json);

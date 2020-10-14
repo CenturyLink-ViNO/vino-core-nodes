@@ -1,7 +1,7 @@
 /* globals module*/
 /* globals require*/
 
-const Parameter = require('../lib/driver-utils/parameter');
+const Parameter = require('vino-node-red-nodes/lib/driver-utils').Parameter;
 
 module.exports = function(RED)
 {

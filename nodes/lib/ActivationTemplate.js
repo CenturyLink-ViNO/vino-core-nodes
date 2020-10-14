@@ -1,7 +1,7 @@
 /* globals module */
 /* globals require */
 /* eslint strict: ["off", "function"] */
-const Parameter = require('./driver-utils/parameter');
+const Parameter = require('vino-node-red-nodes/lib/driver-utils').Parameter;
 
 const processInputParametersForStep = function(step, nodeParams, includeAll)
 {

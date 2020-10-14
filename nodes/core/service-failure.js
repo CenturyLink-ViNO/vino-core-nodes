@@ -2,7 +2,7 @@
 /* globals require*/
 /* globals console*/
 const configStore = require('../lib/configStore/configStore');
-const NodeUtilities = require('../lib/driver-utils/index');
+const NodeUtilities = require('vino-node-red-nodes/lib/driver-utils');
 
 module.exports = function(RED)
 {

@@ -1,0 +1,29 @@
+{
+  "name": "vino-core-nodes",
+  "version": "@VERSION@",
+  "description": "A Node-RED library containing the nodes required to create ViNO service flows.",
+  "keywords": [
+    "Node-RED",
+    "ViNO"
+  ],
+  "author": "Centurylink, INC",
+  "license": "Apache-2.0",
+  "node-red": {
+    "nodes": {
+      "conditional-end.js": "core/conditional-end.js",
+      "conditional-start.js": "core/conditional-start.js",
+      "deactivate-endpoint": "core/deactivate-endpoint.js",
+      "loop-end": "core/loop-end.js",
+      "loop-start": "core/loop-start.js",
+      "parameter-wrapper": "core/parameter-wrapper.js",
+      "service-endpoint": "core/service-endpoint.js",
+      "service-entrypoint": "core/service-entrypoint.js",
+      "service-failure": "core/service-failure.js",
+      "status": "core/status.js",
+      "throw": "core/throw.js"
+    }
+  },
+  "dependencies": {
+    "vino-node-red-nodes": "file:./vino-node-red-nodes-@VERSION@.tgz"
+  }
+}

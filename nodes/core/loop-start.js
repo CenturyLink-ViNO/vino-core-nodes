@@ -2,8 +2,8 @@
 /* globals require*/
 /* eslint complexity: ["off"] */
 
-const Parameter = require('../lib/driver-utils/parameter');
-const NodeUtilities = require('../lib/driver-utils/index');
+const NodeUtilities = require('vino-node-red-nodes/lib/driver-utils');
+const Parameter = NodeUtilities.Parameter;
 
 module.exports = function(RED)
 {

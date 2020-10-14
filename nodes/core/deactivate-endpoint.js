@@ -3,7 +3,7 @@
 /* globals console*/
 
 const typeorm = require('typeorm');
-const ServiceActivation = require('../../entities/activation/ServiceActivation');
+const ServiceActivation = require('../../../entities/activation/ServiceActivation');
 const configStore = require('../lib/configStore/configStore');
 module.exports = function(RED)
 {

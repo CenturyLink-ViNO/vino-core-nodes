@@ -251,7 +251,7 @@ if (!ctl.ui.populateParameterMappingFields)
          let selection = jQuery(this).val(); //eslint-disable-line
          mappedKeySelect.find('option').remove();
          mappedKeySelect.find('optgroup').remove();
-         if (selection)
+         if (selection && nodes[selection])
          {
             const mappedNode = nodes[selection];
             if (mappedNode.subFlowOutputParams)
