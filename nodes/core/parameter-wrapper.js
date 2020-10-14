@@ -4,8 +4,13 @@
 const NodeUtilities = require('vino-node-red-nodes/lib/driver-utils');
 const Parameter = NodeUtilities.Parameter;
 const VinoNodeUtility = NodeUtilities.VinoNodeUtility;
+const settingsObject = require('./config/parameter-wrapper');
+
+const inspect = require('util').inspect;
 module.exports = function(RED)
 {
+   const utils = NodeUtilities.Utils;
+
    function constructMsgObject(msg, inputParams)
    {
       inputParams.forEach(function(inputParam)
@@ -108,15 +113,16 @@ module.exports = function(RED)
    }
    function ParameterWrapper(nodeDefinition)
    {
+      this.NodeUtility = new VinoNodeUtility(
+         nodeDefinition.name, nodeDefinition.description, nodeDefinition.baseTypes,
+         nodeDefinition.selectedBaseType,
+         settingsObject.settings.parameterWrapperCommands.value, [], RED
+      );
       RED.nodes.createNode(this, nodeDefinition);
       this.description = nodeDefinition.description;
       this.baseTypes = nodeDefinition.baseTypes;
       this.selectedBaseType = nodeDefinition.selectedBaseType;
       this.statusConfiguration = nodeDefinition.statusConfiguration;
-      this.NodeUtility = new VinoNodeUtility(
-         nodeDefinition.name, nodeDefinition.description, nodeDefinition.baseTypes,
-         nodeDefinition.selectedBaseType, RED
-      );
 
       const outer = this;
 
@@ -139,6 +145,7 @@ module.exports = function(RED)
 
          try
          {
+            utils.debug(`message: ${inspect(msg)}`, outer, msg);
             const inputParams = await outer.NodeUtility.processInputParameters(msg, outer);
             let outputParams = [];
 
@@ -223,92 +230,5 @@ module.exports = function(RED)
          }
       });
    }
-   const settingsObject = {
-      settings: {
-         parameterWrapperCommands: {
-            value: [
-               {
-                  name: 'Parameter Injection/Extraction',
-                  key: 'parameter_wrapper',
-                  description: 'Injects any input parameters into the Node-Red msg object and attempts to extract any' +
-                     'output parameters from the msg object with a matching key',
-                  allowedExtractionMethods: ['CUSTOM'],
-                  inputParameters:
-                     [],
-                  outputParameters:
-                     []
-               },
-               {
-                  name: 'Parameter Combiner (String)',
-                  key: 'parameter_combiner_string',
-                  description: 'Combines any input parameters into a string list type output',
-                  allowedExtractionMethods: ['CUSTOM'],
-                  inputParameters:
-                     [],
-                  outputParameters:
-                     [
-                        {
-                           parameterName: 'Combined Output',
-                           parameterKey: 'combined_output',
-                           parameterDescription: 'A single list of all provided input parameters',
-                           parameterType: 'stringList',
-                           outputDetails:
-                              {
-                                 type: 'CUSTOM',
-                                 format: 'unused'
-                              }
-                        }
-                     ]
-               },
-               {
-                  name: 'Parameter Combiner (Number)',
-                  key: 'parameter_combiner_number',
-                  description: 'Combines any input parameters into a string list type output',
-                  allowedExtractionMethods: ['CUSTOM'],
-                  inputParameters:
-                     [],
-                  outputParameters:
-                     [
-                        {
-                           parameterName: 'Combined Output',
-                           parameterKey: 'combined_output',
-                           parameterDescription: 'A single list of all provided input parameters',
-                           parameterType: 'numberList',
-                           outputDetails:
-                              {
-                                 type: 'CUSTOM',
-                                 format: 'unused'
-                              }
-                        }
-                     ]
-               },
-               {
-                  name: 'Parameter Combiner (Boolean)',
-                  key: 'parameter_combiner_boolean',
-                  description: 'Combines any input parameters into a string list type output',
-                  allowedExtractionMethods: ['CUSTOM'],
-                  inputParameters:
-                     [],
-                  outputParameters:
-                     [
-                        {
-                           parameterName: 'Combined Output',
-                           parameterKey: 'combined_output',
-                           parameterDescription: 'A single list of all provided input parameters',
-                           parameterType: 'booleanList',
-                           outputDetails:
-                              {
-                                 type: 'CUSTOM',
-                                 format: 'unused'
-                              }
-                        }
-                     ]
-               }
-            ],
-            exportable: true
-         }
-      }
-   };
-
    RED.nodes.registerType('parameter wrapper', ParameterWrapper, settingsObject);
 };

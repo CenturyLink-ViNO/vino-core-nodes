@@ -2,6 +2,8 @@
 /* globals require*/
 
 const NodeUtilities = require('vino-node-red-nodes/lib/driver-utils');
+const settingsObject = require('./config/status');
+const inspect = require('util').inspect;
 
 module.exports = function(RED)
 {
@@ -9,15 +11,15 @@ module.exports = function(RED)
    {
       const utils = NodeUtilities.Utils;
       const VinoNodeUtility = NodeUtilities.VinoNodeUtility;
+      this.NodeUtility = new VinoNodeUtility(
+         nodeDefinition.name, nodeDefinition.description,
+         nodeDefinition.baseTypes, nodeDefinition.selectedBaseType, settingsObject.settings.serviceStatusCommands.value, [], RED
+      );
       RED.nodes.createNode(this, nodeDefinition);
       this.description = nodeDefinition.description;
       this.baseTypes = nodeDefinition.baseTypes;
       this.selectedBaseType = nodeDefinition.selectedBaseType;
       this.message = nodeDefinition.message;
-      this.NodeUtility = new VinoNodeUtility(
-         nodeDefinition.name, nodeDefinition.description,
-         nodeDefinition.baseTypes, nodeDefinition.selectedBaseType, RED
-      );
 
       const outer = this;
 
@@ -39,6 +41,7 @@ module.exports = function(RED)
 
          try
          {
+            utils.debug(`message: ${inspect(msg)}`, outer, msg);
             const inputParams = await outer.NodeUtility.processInputParameters(msg, outer);
 
 
@@ -68,24 +71,5 @@ module.exports = function(RED)
          }
       });
    }
-
-   const settingsObject = {
-      settings: {
-         serviceStatusCommands: {
-            value: [
-               {
-                  name: 'service status',
-                  key: 'service_status',
-                  description: 'Outputs a message to the service activation status',
-                  allowedExtractionMethods: ['CUSTOM'],
-                  inputParameters: [],
-                  outputParameters: []
-               }
-            ],
-            exportable: true
-         }
-      }
-   };
-
    RED.nodes.registerType('service status', StatusNode, settingsObject);
 };

@@ -1,0 +1,60 @@
+{
+  "settings": {
+    "conditionalStartCommands": {
+      "value": [
+        {
+          "name": "Conditional",
+          "key": "conditional",
+          "description": "Used branch between 2 paths based on a condition",
+          "allowedExtractionMethods": ["CUSTOM"],
+          "inputParameters":
+          [
+            {
+              "parameterName": "Left Hand Side",
+              "parameterKey": "lhs",
+              "parameterDescription": "The left hand operand",
+              "parameterType": "string"
+            },
+            {
+              "parameterName": "Right Hand Side",
+              "parameterKey": "rhs",
+              "parameterDescription": "The right hand operand",
+              "parameterType": "string"
+            },
+            {
+              "parameterName": "Operation",
+              "parameterKey": "op",
+              "parameterDescription": "The comparison operation to perform.",
+              "parameterType": "enumerated",
+              "inputDetails":
+              { "options": ["eq", "gt", "gte", "lt", "lte"] }
+            },
+            {
+              "parameterName": "Operand Data Type",
+              "parameterKey": "dataType",
+              "parameterDescription": "The data type of the two operands. Valid options are \"string\", \"number\", or \"boolean\"",
+              "parameterType": "enumerated",
+              "inputDetails":
+              { "options": ["string", "number", "boolean"] }
+            }
+          ],
+          "outputParameters":
+          [
+            {
+              "parameterName": "Evaluation Result",
+              "parameterKey": "result",
+              "parameterDescription": "The result of the conditional evaluation",
+              "parameterType": "boolean",
+              "outputDetails":
+              {
+                "type": "CUSTOM",
+                "format": "unused"
+              }
+            }
+          ]
+        }
+      ],
+      "exportable": true
+    }
+  }
+}

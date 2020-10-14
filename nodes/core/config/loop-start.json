@@ -1,0 +1,121 @@
+{
+  "settings": {
+    "loopStartCommands": {
+      "value": [
+        {
+          "name": "Loop",
+          "key": "loop",
+          "description": "Used to wrap one or more steps in a loop",
+          "allowedExtractionMethods": [
+            "CUSTOM"
+          ],
+          "inputParameters": [
+            {
+              "parameterName": "Iterations",
+              "parameterKey": "iterations",
+              "parameterDescription": "Number of iterations to perform",
+              "parameterType": "number"
+            }
+          ],
+          "outputParameters": [
+            {
+              "parameterName": "Current Iteration",
+              "parameterKey": "currentIteration",
+              "parameterDescription": "The current iteration (starting with 0)",
+              "parameterType": "number",
+              "outputDetails": {
+                "type": "CUSTOM",
+                "format": "unused"
+              }
+            }
+          ]
+        },
+        {
+          "name": "For Each Loop (String)",
+          "key": "forEachLoopString",
+          "description": "Used to wrap one or more steps in a loop",
+          "allowedExtractionMethods": [
+            "CUSTOM"
+          ],
+          "inputParameters": [
+            {
+              "parameterName": "Input List",
+              "parameterKey": "inputList",
+              "parameterDescription": "List to iterate over",
+              "parameterType": "stringList"
+            }
+          ],
+          "outputParameters": [
+            {
+              "parameterName": "Current Value",
+              "parameterKey": "currentValue",
+              "parameterDescription": "The current value in the list being iterated over",
+              "parameterType": "string",
+              "outputDetails": {
+                "type": "CUSTOM",
+                "format": "unused"
+              }
+            }
+          ]
+        },
+        {
+          "name": "For Each Loop (Number)",
+          "key": "forEachLoopNumber",
+          "description": "Used to wrap one or more steps in a loop",
+          "allowedExtractionMethods": [
+            "CUSTOM"
+          ],
+          "inputParameters": [
+            {
+              "parameterName": "Input List",
+              "parameterKey": "inputList",
+              "parameterDescription": "List to iterate over",
+              "parameterType": "numberList"
+            }
+          ],
+          "outputParameters": [
+            {
+              "parameterName": "Current Value",
+              "parameterKey": "currentValue",
+              "parameterDescription": "The current value in the list being iterated over",
+              "parameterType": "number",
+              "outputDetails": {
+                "type": "CUSTOM",
+                "format": "unused"
+              }
+            }
+          ]
+        },
+        {
+          "name": "For Each Loop (Boolean)",
+          "key": "forEachLoopBoolean",
+          "description": "Used to wrap one or more steps in a loop",
+          "allowedExtractionMethods": [
+            "CUSTOM"
+          ],
+          "inputParameters": [
+            {
+              "parameterName": "Input List",
+              "parameterKey": "inputList",
+              "parameterDescription": "List to iterate over",
+              "parameterType": "booleanList"
+            }
+          ],
+          "outputParameters": [
+            {
+              "parameterName": "Current Value",
+              "parameterKey": "currentValue",
+              "parameterDescription": "The current value in the list being iterated over",
+              "parameterType": "boolean",
+              "outputDetails": {
+                "type": "CUSTOM",
+                "format": "unused"
+              }
+            }
+          ]
+        }
+      ],
+      "exportable": true
+    }
+  }
+}

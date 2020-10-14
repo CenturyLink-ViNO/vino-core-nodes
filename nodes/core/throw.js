@@ -3,6 +3,8 @@
 /* globals module */
 
 const NodeUtilities = require('vino-node-red-nodes/lib/driver-utils');
+const settingsObject = require('./config/throw');
+const inspect = require('util').inspect;
 module.exports = function(RED)
 {
    const utils = NodeUtilities.Utils;
@@ -10,12 +12,13 @@ module.exports = function(RED)
 
    function ThrowNode(nodeDefinition)
    {
-      RED.nodes.createNode(this, nodeDefinition);
-      this.message = nodeDefinition.message;
       this.NodeUtility = new VinoNodeUtility(
          nodeDefinition.name, nodeDefinition.description,
-         nodeDefinition.baseTypes, nodeDefinition.selectedBaseType, RED
+         nodeDefinition.baseTypes, nodeDefinition.selectedBaseType,
+         settingsObject.settings.throwCommands.value, [], RED
       );
+      RED.nodes.createNode(this, nodeDefinition);
+      this.message = nodeDefinition.message;
 
       const outer = this;
 
@@ -36,6 +39,7 @@ module.exports = function(RED)
          }
          try
          {
+            utils.debug(`message: ${inspect(msg)}`, outer, msg);
             const inputParams = await outer.NodeUtility.processInputParameters(msg, outer);
 
             if (!inputParams)
@@ -64,25 +68,5 @@ module.exports = function(RED)
          }
       });
    }
-
-   const settingsObject = {
-      settings: {
-         throwCommands: {
-            value: [
-               {
-                  name: 'throw error',
-                  key: 'throw_error',
-                  description: 'Throws an error and prints a message',
-                  allowedExtractionMethods: ['CUSTOM'],
-                  inputParameters:
-                     [],
-                  outputParameters:
-                     []
-               }
-            ],
-            exportable: true
-         }
-      }
-   };
    RED.nodes.registerType('throw', ThrowNode, settingsObject);
 };

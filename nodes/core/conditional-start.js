@@ -4,6 +4,8 @@
 
 const NodeUtilities = require('vino-node-red-nodes/lib/driver-utils');
 const Parameter = NodeUtilities.Parameter;
+const settingsObject = require('./config/conditional-start');
+const inspect = require('util').inspect;
 module.exports = function(RED)
 {
    const utils = NodeUtilities.Utils;
@@ -105,6 +107,11 @@ module.exports = function(RED)
 
    function ConditionalStartNode(nodeDefinition)
    {
+      this.NodeUtility = new VinoNodeUtility(
+         nodeDefinition.name, nodeDefinition.description,
+         nodeDefinition.baseTypes, nodeDefinition.selectedBaseType,
+         settingsObject.settings.conditionalStartCommands.value, [], RED
+      );
       RED.nodes.createNode(this, nodeDefinition);
       this.description = nodeDefinition.description;
       this.baseTypes = nodeDefinition.baseTypes;
@@ -114,10 +121,6 @@ module.exports = function(RED)
       this.trueSteps = [];
       this.falseSteps = [];
       this.evaluation = null;
-      this.NodeUtility = new VinoNodeUtility(
-         nodeDefinition.name, nodeDefinition.description,
-         nodeDefinition.baseTypes, nodeDefinition.selectedBaseType, RED
-      );
       const outer = this;
 
       this.on('input', async function(msg)
@@ -138,6 +141,7 @@ module.exports = function(RED)
 
          try
          {
+            utils.debug(`message: ${inspect(msg)}`, outer, msg);
             const inputParams = await outer.NodeUtility.processInputParameters(msg, outer);
             const outputParams = [];
 
@@ -269,65 +273,5 @@ module.exports = function(RED)
       };
    }
 
-   const settingsObject = {
-      settings: {
-         conditionalStartCommands: {
-            value: [
-               {
-                  name: 'Conditional',
-                  key: 'conditional',
-                  description: 'Used branch between 2 paths based on a condition',
-                  allowedExtractionMethods: ['CUSTOM'],
-                  inputParameters:
-                     [
-                        {
-                           parameterName: 'Left Hand Side',
-                           parameterKey: 'lhs',
-                           parameterDescription: 'The left hand operand',
-                           parameterType: 'string'
-                        },
-                        {
-                           parameterName: 'Right Hand Side',
-                           parameterKey: 'rhs',
-                           parameterDescription: 'The right hand operand',
-                           parameterType: 'string'
-                        },
-                        {
-                           parameterName: 'Operation',
-                           parameterKey: 'op',
-                           parameterDescription: 'The comparison operation to perform.',
-                           parameterType: 'enumerated',
-                           inputDetails:
-                              { options: ['eq', 'gt', 'gte', 'lt', 'lte'] }
-                        },
-                        {
-                           parameterName: 'Operand Data Type',
-                           parameterKey: 'dataType',
-                           parameterDescription: 'The data type of the two operands. Valid options are "string", "number", or "boolean"',
-                           parameterType: 'enumerated',
-                           inputDetails:
-                              { options: ['string', 'number', 'boolean'] }
-                        }
-                     ],
-                  outputParameters:
-                     [
-                        {
-                           parameterName: 'Evaluation Result',
-                           parameterKey: 'result',
-                           parameterDescription: 'The result of the conditional evaluation',
-                           parameterType: 'boolean',
-                           outputDetails:
-                              {
-                                 type: 'CUSTOM',
-                                 format: 'unused'
-                              }
-                        }
-                     ]
-               }
-            ],
-            exportable: true
-         }
-      }
-   };
    RED.nodes.registerType('conditional start', ConditionalStartNode, settingsObject);
 };

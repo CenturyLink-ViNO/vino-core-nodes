@@ -4,7 +4,8 @@
 
 const NodeUtilities = require('vino-node-red-nodes/lib/driver-utils');
 const Parameter = NodeUtilities.Parameter;
-
+const settingsObject = require('./config/loop-start');
+const inspect = require('util').inspect;
 module.exports = function(RED)
 {
    const utils = NodeUtilities.Utils;
@@ -198,6 +199,10 @@ module.exports = function(RED)
 
    function LoopStartNode(nodeDefinition)
    {
+      this.NodeUtility = new VinoNodeUtility(
+         nodeDefinition.name, nodeDefinition.description, nodeDefinition.baseTypes,
+         nodeDefinition.selectedBaseType, settingsObject.settings.loopStartCommands.value, [], RED
+      );
       RED.nodes.createNode(this, nodeDefinition);
       this.description = nodeDefinition.description;
       this.baseTypes = nodeDefinition.baseTypes;
@@ -208,10 +213,6 @@ module.exports = function(RED)
       this.inputList = [];
       this.endNode = null;
       this.steps = [];
-      this.NodeUtility = new VinoNodeUtility(
-         nodeDefinition.name, nodeDefinition.description, nodeDefinition.baseTypes,
-         nodeDefinition.selectedBaseType, RED
-      );
       const outer = this;
 
       this.on('input', async function(msg)
@@ -232,6 +233,7 @@ module.exports = function(RED)
 
          try
          {
+            utils.debug(`message: ${inspect(msg)}`, outer, msg);
             const inputParams = await outer.NodeUtility.processInputParameters(msg, outer);
 
             if (!inputParams)
@@ -366,133 +368,5 @@ module.exports = function(RED)
          });
       };
    }
-
-   const settingsObject = {
-      settings: {
-         loopStartCommands: {
-            value: [
-               {
-                  name: 'Loop',
-                  key: 'loop',
-                  description: 'Used to wrap one or more steps in a loop',
-                  allowedExtractionMethods: ['CUSTOM'],
-                  inputParameters:
-                     [
-                        {
-                           parameterName: 'Iterations',
-                           parameterKey: 'iterations',
-                           parameterDescription: 'Number of iterations to perform',
-                           parameterType: 'number'
-                        }
-                     ],
-                  outputParameters:
-                     [
-                        {
-                           parameterName: 'Current Iteration',
-                           parameterKey: 'currentIteration',
-                           parameterDescription: 'The current iteration (starting with 0)',
-                           parameterType: 'number',
-                           outputDetails:
-                              {
-                                 type: 'CUSTOM',
-                                 format: 'unused'
-                              }
-                        }
-                     ]
-               },
-               {
-                  name: 'For Each Loop (String)',
-                  key: 'forEachLoopString',
-                  description: 'Used to wrap one or more steps in a loop',
-                  allowedExtractionMethods: ['CUSTOM'],
-                  inputParameters:
-                     [
-                        {
-                           parameterName: 'Input List',
-                           parameterKey: 'inputList',
-                           parameterDescription: 'List to iterate over',
-                           parameterType: 'stringList'
-                        }
-                     ],
-                  outputParameters:
-                     [
-                        {
-                           parameterName: 'Current Value',
-                           parameterKey: 'currentValue',
-                           parameterDescription: 'The current value in the list being iterated over',
-                           parameterType: 'string',
-                           outputDetails:
-                              {
-                                 type: 'CUSTOM',
-                                 format: 'unused'
-                              }
-                        }
-                     ]
-               },
-               {
-                  name: 'For Each Loop (Number)',
-                  key: 'forEachLoopNumber',
-                  description: 'Used to wrap one or more steps in a loop',
-                  allowedExtractionMethods: ['CUSTOM'],
-                  inputParameters:
-                     [
-                        {
-                           parameterName: 'Input List',
-                           parameterKey: 'inputList',
-                           parameterDescription: 'List to iterate over',
-                           parameterType: 'numberList'
-                        }
-                     ],
-                  outputParameters:
-                     [
-                        {
-                           parameterName: 'Current Value',
-                           parameterKey: 'currentValue',
-                           parameterDescription: 'The current value in the list being iterated over',
-                           parameterType: 'number',
-                           outputDetails:
-                              {
-                                 type: 'CUSTOM',
-                                 format: 'unused'
-                              }
-                        }
-                     ]
-               },
-               {
-                  name: 'For Each Loop (Boolean)',
-                  key: 'forEachLoopBoolean',
-                  description: 'Used to wrap one or more steps in a loop',
-                  allowedExtractionMethods: ['CUSTOM'],
-                  inputParameters:
-                     [
-                        {
-                           parameterName: 'Input List',
-                           parameterKey: 'inputList',
-                           parameterDescription: 'List to iterate over',
-                           parameterType: 'booleanList'
-                        }
-                     ],
-                  outputParameters:
-                     [
-                        {
-                           parameterName: 'Current Value',
-                           parameterKey: 'currentValue',
-                           parameterDescription: 'The current value in the list being iterated over',
-                           parameterType: 'boolean',
-                           outputDetails:
-                              {
-                                 type: 'CUSTOM',
-                                 format: 'unused'
-                              }
-                        }
-                     ]
-               }
-            ],
-            exportable: true
-         }
-      }
-   };
-
-
    RED.nodes.registerType('loop start', LoopStartNode, settingsObject);
 };
