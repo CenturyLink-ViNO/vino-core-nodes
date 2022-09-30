@@ -264,6 +264,7 @@ module.exports =
          const template = {
             serviceName: serviceStartNode.name,
             customerName: '',
+            isUsFederalCustomer: false,
             settingsRootGroup: '',
             settingsRootRequired: false,
             debug: false,

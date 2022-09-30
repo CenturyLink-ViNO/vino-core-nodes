@@ -120,6 +120,7 @@ class VinoServiceActivation
       this.name = node.name;
       this.description = node.description;
       this.customerName = data.customerName || 'ViNO';
+      this.isUsFederalCustomer = typeof data.isUsFederalCustomer === 'boolean' ? data.isUsFederalCustomer : false;
       this.settingsRootGroup = data.settingsRootGroup;
       this.notes = data.notes;
       this.startTime = Date.now();

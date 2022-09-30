@@ -59,7 +59,6 @@ module.exports = function(RED)
          console.error(`Failed to unregister service with ViNO API Server - ${error}`, {});
       }
    }
-
    function ServiceStartNode(nodeDefinition)
    {
       this.name = nodeDefinition.name;
@@ -68,7 +67,6 @@ module.exports = function(RED)
       this.serviceRegistrationId = nodeDefinition.serviceRegistrationId;
       this.activationSteps = [];
       this.deactivationSteps = [];
-
       RED.nodes.createNode(this, nodeDefinition);
       this.status({
          fill: 'yellow',
@@ -76,12 +74,10 @@ module.exports = function(RED)
          text: 'Registering...'
       });
       const outer = this;
-
       this.getTemplate = function()
       {
          return ActivationTemplate.getActivationTemplate(outer, RED);
       };
-
       this.cancelActivation = function(serviceActivationId)
       {
          const serviceActivation = outer.context().global.vinoServiceActivations[serviceActivationId];
@@ -91,6 +87,10 @@ module.exports = function(RED)
             serviceActivation.cancel = true;
             return outer.getActivationStatus(serviceActivation.id);
          }
+      };
+      this.getActivationData = function(serviceActivationId)
+      {
+         return outer.context().global.vinoServiceActivations[serviceActivationId];
       };
       this.getActivationStatus = function(serviceActivationId, wrapped)
       {
@@ -188,7 +188,6 @@ module.exports = function(RED)
                         return element;
                      });
                      const constant = rootGroup.getConstant(fullPath);
-
                      if (constant)
                      {
                         serviceActivation.resolvedSettings[param.inputDetails.constantsPath] = constant;
@@ -202,13 +201,11 @@ module.exports = function(RED)
             }
          }
       };
-
       this.activate = function(activationData)
       {
          // Set up the context for this activation
          const activationId = RED.util.generateId();
          const serviceActivation = new VinoServiceActivation(activationId, outer, activationData);
-
          const defaultSettingsRoot = activationData.settingsRootGroup;
          const allSteps = outer.activationSteps.concat(outer.deactivationSteps);
          outer.resolveParametersFromSettings(serviceActivation, defaultSettingsRoot, allSteps).then(function()
@@ -233,17 +230,26 @@ module.exports = function(RED)
          });
          return outer.getActivationStatus(activationId);
       };
-
       this.getActivatedServiceData = async function(jobId)
       {
          const service = await typeorm.getRepository(ServiceActivation).findOne(jobId, {
-            select: ['id', 'referenceId', 'name', 'description', 'customerName', 'notes', 'startTime', 'settingsRootGroup', 'msg'],
+            select: [
+               'id',
+               'referenceId',
+               'name',
+               'description',
+               'customerName',
+               'notes',
+               'startTime',
+               'settingsRootGroup',
+               'msg',
+               'isUsFederalCustomer'
+            ],
             relations: ['status']
          });
          service.steps = await typeorm.getRepository(StepWrapper).find({ where: [{ serviceActivation: service }] });
          return service;
       };
-
       this.deactivate = async function(activationId, wrapped)
       {
          if (outer.wires[1].length < 1)
@@ -251,9 +257,7 @@ module.exports = function(RED)
             console.error('Requested deactivation for service without deactivation flow');
             throw new Error('No deactivation flow has been defined for this service');
          }
-
          console.debug(`Received deactivation request for service with ID ${activationId}.`);
-
          let resp;
          const data = await outer.getActivatedServiceData(activationId);
          const serviceActivation = new VinoServiceActivation(activationId, outer, data, true);
@@ -304,14 +308,12 @@ module.exports = function(RED)
          );
          return resp;
       };
-
       this.on('close', async function(done)
       {
          // Unregister this service if this node is deleted from the flow
          await unregisterService(outer);
          done();
       });
-
       this.gatherServiceSteps = function()
       {
          let copy = Object.assign({}, outer);
@@ -390,7 +392,6 @@ module.exports = function(RED)
          return ret;
       };
    }
-
    function processNode(node, subflowInstanceNodes)
    {
       switch (node.type)
@@ -468,7 +469,6 @@ module.exports = function(RED)
       services.forEach(async function(serviceEntryNode)
       {
          const validation = serviceEntryNode.isValid();
-
          if (validation.result)
          {
             if (serviceNames.indexOf(serviceEntryNode.name) === -1)
